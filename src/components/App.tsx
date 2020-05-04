@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Hello } from './Hello';
+import { GameOfLife } from './GameOfLife';
 
 class App extends React.Component<{}> {
     render() {
-        return <Hello />;
+        return <GameOfLife speed={150} width={15} height={15} />;
     }
 }
 

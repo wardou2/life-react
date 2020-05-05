@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Board } from './Interface';
 import { GameBoard } from './GameBoard';
 
@@ -21,6 +21,8 @@ const TOAD = [
 ];
 
 export const GameOfLife = ({ speed, width, height }: Props) => {
+    const [isRunning, setIsRunning] = useState(false);
+
     const deadState = (width: number, height: number): Board => {
         const board: Board = [[]];
         for (let h = 0; h < height; h++) {
@@ -114,11 +116,25 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
         }, speed);
     };
 
-    run(boardState);
+    const handlePlay = (): void => {
+        if (isRunning) return;
+        setIsRunning(true);
+        run(boardState);
+    };
+
+    useEffect(() => {
+        console.log('here');
+        if (isRunning) run(boardState);
+    }, [boardState]);
 
     return (
-        <div style={{ width: '600px' }}>
-            <GameBoard board={boardState} />
-        </div>
+        <>
+            {!isRunning && <button onClick={handlePlay}>Click me!</button>}
+            {isRunning && (
+                <div style={{ width: '600px' }}>
+                    <GameBoard board={boardState} />
+                </div>
+            )}
+        </>
     );
 };

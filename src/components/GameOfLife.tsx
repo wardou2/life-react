@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { FC, useState } from 'react';
-
-type Board = boolean[][];
+import { useState } from 'react';
+import { Board } from './Interface';
+import { GameBoard } from './GameBoard';
 
 interface Props {
     speed: number;
@@ -148,10 +148,8 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
     run(boardState);
 
     return (
-        <div style={{ whiteSpace: 'pre-line' }}>{renderBoard(boardState)}</div>
+        <div style={{ width: '600px' }}>
+            <GameBoard board={boardState} />
+        </div>
     );
 };
-
-// const initState = deadState(20, 20);
-// const randState = randomState(initState);
-// run(randState);

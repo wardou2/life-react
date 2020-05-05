@@ -34,8 +34,6 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
         return board;
     };
 
-    const DEAD_STATE = deadState(width, height);
-
     const randomState = (board: Board): Board => {
         const randomBoard: Board = JSON.parse(JSON.stringify(board));
         randomBoard.forEach((row) => {
@@ -47,35 +45,6 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
             });
         });
         return randomBoard;
-    };
-
-    const renderBoard = (board: Board) => {
-        const row = board.length;
-        const col = board[0].length;
-
-        let output = '';
-
-        let border = '--';
-        for (let i = 0; i < row; i++) {
-            border += '-';
-        }
-        border += '\n';
-        output += border;
-
-        for (let r = 0; r < row; r++) {
-            let line = '|';
-            for (let c = 0; c < col; c++) {
-                if (board[r][c]) {
-                    line += LIVE;
-                } else {
-                    line += DEAD;
-                }
-            }
-            line += '|\n';
-            output += line;
-        }
-        output += border;
-        return output;
     };
 
     const nextBoardState = (board: Board): Board => {

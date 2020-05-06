@@ -1,0 +1,19 @@
+.container {
+    display: table;
+    height: 100%;
+    width: 100%;
+    border: solid;
+}
+
+.cell {
+    // box-shadow: 0 0 1px 1px grey inset;
+
+    &__alive {
+        // background: linear-gradient(#e66465, #9198e5);
+        background: black;
+    }
+
+    &__dead {
+        background-color: white;
+    }
+}

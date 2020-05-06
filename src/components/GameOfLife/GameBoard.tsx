@@ -8,7 +8,6 @@ interface Props {
 }
 
 export const GameBoard = ({ board }: Props) => {
-    const height = board.length;
     const width = board[0].length;
 
     return (
@@ -24,8 +23,8 @@ export const GameBoard = ({ board }: Props) => {
                                             cell ? 'alive' : 'dead'
                                         }`}
                                         style={{
-                                            width: `${100 / height}%`,
-                                            paddingBottom: `${100 / height}%`,
+                                            width: `${100 / width}%`,
+                                            paddingBottom: `${100 / width}%`,
                                         }}
                                     />
                                 );

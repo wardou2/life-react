@@ -3,14 +3,9 @@ import { useState, useEffect } from 'react';
 import { Board } from './Interface';
 import { GameBoard } from './GameBoard';
 
-interface Props {
-    speed: number;
-    width: number;
-    height: number;
-}
-
-const LIVE = '#';
-const DEAD = '`';
+const SPEED = 180;
+const WIDTH = 40;
+const HEIGHT = 20;
 const TOAD = [
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
@@ -19,9 +14,20 @@ const TOAD = [
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
 ];
+const GLIDER = [
+    [false, true, false, false, false, false],
+    [false, true, true, false, false, false],
+    [true, false, true, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+    [false, false, false, false, false, false],
+];
 
-export const GameOfLife = ({ speed, width, height }: Props) => {
+export const GameOfLife = () => {
     const [isRunning, setIsRunning] = useState(false);
+    const [speed, setSpeed] = useState(SPEED);
+    const [width, setWidth] = useState(WIDTH);
+    const [height, setHeight] = useState(HEIGHT);
 
     const deadState = (width: number, height: number): Board => {
         const board: Board = [[]];
@@ -41,7 +47,7 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
         randomBoard.forEach((row) => {
             row.forEach((_cell, colIndex) => {
                 const randNumb = Math.random();
-                if (randNumb < 0.5) {
+                if (randNumb < 0.2) {
                     row[colIndex] = true;
                 }
             });
@@ -113,7 +119,7 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
         setTimeout(() => {
             const next = nextBoardState(board);
             setBoardState(next);
-        }, speed);
+        }, Number(speed));
     };
 
     const handlePlay = (): void => {
@@ -123,18 +129,92 @@ export const GameOfLife = ({ speed, width, height }: Props) => {
     };
 
     useEffect(() => {
-        console.log('here');
+        setBoardState(randomState(deadState(width, height)));
+    }, [width, height]);
+
+    useEffect(() => {
         if (isRunning) run(boardState);
     }, [boardState]);
 
+    const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        switch (ev.target.name) {
+            case 'width':
+                setWidth(Number(ev.target.value));
+                break;
+            case 'height':
+                setHeight(Number(ev.target.value));
+                break;
+            case 'speed':
+                setSpeed(Number(ev.target.value));
+                break;
+        }
+    };
+
     return (
         <>
-            {!isRunning && <button onClick={handlePlay}>Click me!</button>}
+            {!isRunning && (
+                <GameControls
+                    speed={speed}
+                    height={height}
+                    width={width}
+                    handleChange={handleChange}
+                    handlePlay={handlePlay}
+                />
+            )}
             {isRunning && (
-                <div style={{ width: '600px' }}>
+                <div style={{ width: `100%` }}>
                     <GameBoard board={boardState} />
                 </div>
             )}
         </>
+    );
+};
+
+const GameControls = ({
+    speed,
+    height,
+    width,
+    handleChange,
+    handlePlay,
+}: {
+    speed: number;
+    height: number;
+    width: number;
+    handleChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+    handlePlay: () => void;
+}) => {
+    return (
+        <div>
+            <form>
+                <label> Speed: {speed} ms</label>
+                <input
+                    type="range"
+                    step="1"
+                    min="10"
+                    max="1000"
+                    name="speed"
+                    value={speed}
+                    onChange={handleChange}
+                />
+                <br />
+                <label> Height: </label>
+                <input
+                    type="number"
+                    value={height}
+                    name="height"
+                    onChange={handleChange}
+                />
+                <br />
+                <label> Width: </label>
+                <input
+                    type="number"
+                    value={width}
+                    name="width"
+                    onChange={handleChange}
+                />
+                <br />
+                <button onClick={handlePlay}>Click me!</button>
+            </form>
+        </div>
     );
 };
